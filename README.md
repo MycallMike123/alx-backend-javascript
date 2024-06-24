@@ -1,1 +1,1 @@
-This is the repository for my backend programming
+This is the repository for my backend programming using javascript
