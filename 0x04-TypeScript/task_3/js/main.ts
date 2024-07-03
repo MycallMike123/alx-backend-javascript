@@ -6,8 +6,8 @@ import * as CRUD from './crud';
 
 // Create a row object with RowElement type
 const row: RowElement = {
-  firstName: 'Michael',
-  lastName: 'Mwangi'
+  firstName: 'Guillaume',
+  lastName: 'Salva'
 };
 
 // Insert the row and store the returned RowID
