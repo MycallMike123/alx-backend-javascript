@@ -1,21 +1,79 @@
-// Import RowID and RowElement from interface.ts
-import { RowID, RowElement } from '../interface';
+interface DirectorInterface {
+  workFromHome(): string;
+  getCoffeeBreak(): string;
+  workDirectorTasks(): string;
+}
 
-// Import everything from crud.js as CRUD
-import * as CRUD from './crud';
+// Define the TeacherInterface
+interface TeacherInterface {
+  workFromHome(): string;
+  getCoffeeBreak(): string;
+  workTeacherTasks(): string;
+}
 
-// Create a row object with RowElement type
-const row: RowElement = {
-  firstName: 'Michael',
-  lastName: 'Mwangi'
-};
+// Define Director class implementing DirectorInterface
+class Director implements DirectorInterface {
+  workFromHome(): string {
+    return "Working from home";
+  }
 
-// Insert the row and store the returned RowID
-const newRowID: RowID = CRUD.insertRow(row);
+  getCoffeeBreak(): string {
+    return "Getting a coffee break"
+  }
 
-// Update the row with an age field
-const updatedRow: RowElement = { ...row, age: 23 };
+  workDirectorTasks(): string {
+    return "Getting to director tasks"
+  }
+}
 
-// Call updateRow and deleteRow commands
-CRUD.updateRow(newRowID, updatedRow);
-CRUD.deleteRow(newRowID);
+// Define Teacher class implementing TeacherInterface
+class Teacher implements TeacherInterface {
+  workFromHome(): string {
+    return "Cannot work from home"
+  }
+
+  getCoffeeBreak(): string {
+    return "Cannot have a break"
+  }
+
+  workTeacherTasks(): string {
+    return "Getting to work"
+  }
+}
+
+// Define the createEmployee function
+function createEmployee(salary: number | string): Director | Teacher {
+  if (typeof salary === "number" && salary < 500) {
+    return new Teacher();
+  } else {
+    return new Director();
+  }
+}
+
+// Define the isDirector type predicate function
+function isDirector(employee: Director | Teacher): employee is Director {
+  return (employee as Director).workDirectorTasks !== undefined;
+}
+
+// Define the executeWork function
+function executeWork(employee: Director | Teacher): string {
+  if (isDirector(employee)) {
+    return employee.workDirectorTasks();
+  } else {
+    return (employee as Teacher).workTeacherTasks();
+  }
+}
+
+// Define the Subjects string literal type
+type Subjects = 'Math' | 'History';
+
+// Define the teachClass function
+function teachClass(todayClass: Subjects): string {
+  if (todayClass === 'Math') {
+    return 'Teaching Math';
+  } else if (todayClass === 'History') {
+    return 'Teaching History';
+  } else {
+    throw new Error('Invalid subject');
+  }
+}
