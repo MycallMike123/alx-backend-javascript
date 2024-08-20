@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
@@ -51,7 +53,7 @@ const app = http.createServer((req, res) => {
   const reqUrl = url.parse(req.url, true);
 
   if (reqUrl.pathname === '/') {
-    // Handle root route
+    // Handle /root route
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Hello Holberton School!');
   } else if (reqUrl.pathname === '/students') {
@@ -76,5 +78,5 @@ app.listen(1245, () => {
   console.log('Server is listening on port 1245');
 });
 
-// Export the server
+// Export the app
 module.exports = app;
