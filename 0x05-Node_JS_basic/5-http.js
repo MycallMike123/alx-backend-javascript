@@ -1,42 +1,43 @@
+#!/usr/bin/env node
+
 const http = require('http');
 const url = require('url');
-const fs = require('fs');
+const countStudents = require('./3-read_file_async');
 
-// Asynchronously reads a CSV file and counts students by field
-function countStudents(path) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (error, data) => {
-      if (error) {
-        // Reject the promise if the file can't be read
-        reject(new Error('Cannot load the database'));
-      } else {
-        // Split the CSV content into lines
-        const lines = data.split('\n');
+// Path to the CSV file (passed as an argument when running the script)
+const databasePath = process.argv[2];
 
-        // Remove empty lines and get student entries
-        const students = lines.filter((line) => line.trim() !== '').slice(1);
+// Create an HTTP server
+const app = http.createServer((req, res) => {
+    const parsedUrl = url.parse(req.url, true);
 
-        // Create an object to tally students by their field of study
-        const fieldCount = {};
+    if (parsedUrl.pathname === '/') {
+        // Handle root path
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end('Hello Holberton School!');
+    } else if (parsedUrl.pathname === '/students') {
+        // Handle /students path
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.write('This is the list of our students\n');
+        
+        // Call countStudents and handle the promise
+        countStudents(databasePath)
+            .then(() => res.end())
+            .catch((error) => {
+                res.write(`${error.message}\n`);
+                res.end();
+            });
+    } else {
+        // Handle unknown paths
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Not Found');
+    }
+});
 
-        students.forEach((student) => {
-          const [firstName, , , field] = student.split(',');
+// Make the server listen on port 1245
+app.listen(1245, () => {
+    console.log('Server is listening on port 1245');
+});
 
-          if (field) {
-            if (!fieldCount[field]) {
-              fieldCount[field] = [];
-            }
-            fieldCount[field].push(firstName);
-          }
-        });
-
-        // Generate the output string
-        let output = `Number of students: ${students.length}\n`;
-
-        for (const [field, names] of Object.entries(fieldCount)) {
-          output += `Number of students in ${field}: ${
-            names.length
-          }. List: ${names.join(', ')}\n`;
-        }
-
-
+// Export the app
+module.exports = app;
