@@ -39,7 +39,7 @@ describe('calculateNumber', function() {
 
   // Test case 6: Check if the function returns -2 when inputs are -1.2 and -1.2
   it('should return -2 when inputs are -1.2 and -1.2', function() {
-    // Assert that the returned value is strictly equal to -2
+    // Assert that the returned value is strictly equal to  -2
     assert.strictEqual(calculateNumber(-1.2, -1.2), -2);
   });
 });
